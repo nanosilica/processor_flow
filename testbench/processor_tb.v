@@ -49,6 +49,10 @@ module processor_tb;
         reset = 1;
         #10 reset = 0;
 
+        // Dump VCD file for waveform analysis
+        $dumpfile("processor_waveform.vcd"); // Specify the output VCD file name
+        $dumpvars(0, processor_tb); // Dump the signals from the testbench
+
         // Test 1: Test with an ADD instruction (opcode = 6'b000000)
         $display("Applying ADD instruction...");
         instruction = 32'b000000_00000_00001_00000_00000000000; // ADD instruction (example)
