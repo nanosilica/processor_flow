@@ -4,7 +4,8 @@ This project implements a top-level CPU design with various submodules in Verilo
 
 ## Directory Structure
 
-processor_flow/ ├── src/ # Source files for Verilog modules │ ├── processor.v # Main top-level CPU file │ ├── alu.v # Arithmetic Logic Unit │ ├── reg_file.v # Register File │ ├── control_unit.v # Control Unit │ └── ... # Other Verilog modules ├── testbench/ # Testbenches for verification │ ├── tb_processor.v # Testbench for the processor │ └── ... # Other testbenches ├── docs/ # Documentation (if any) ├── README.md # Project overview └── .git/ # Git repository (after initialization)
+![project_structure](https://github.com/user-attachments/assets/73f451ab-a7df-4241-b087-8115b8e351e4)
+
 
 ## Modules Overview
 
