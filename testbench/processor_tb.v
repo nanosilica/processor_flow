@@ -15,16 +15,16 @@
 // License       : Open Source                                            //
 ///////////////////////////////////////////////////////////////////////////
 
-`timescale 1ns / 1ps
-
 module processor_tb;
-    // Declare signals for the testbench
     reg clk;
     reg reset;
     reg [31:0] instruction;
     wire [31:0] result;
+    wire [31:0] data_out;  // Register file output (data read from register)
+    wire [4:0] addr;   // Register address
+    wire we;               // Write enable signal
 
-    // Instantiate the processor
+    // Instantiate the processor (which already contains the reg_file instance)
     processor uut (
         .clk(clk),
         .reset(reset),
@@ -50,35 +50,43 @@ module processor_tb;
         #10 reset = 0;
 
         // Dump VCD file for waveform analysis
-        $dumpfile("processor_waveform.vcd"); // Specify the output VCD file name
-        $dumpvars(0, processor_tb); // Dump the signals from the testbench
+        $dumpfile("processor_waveform_1a.vcd");
+        $dumpvars(0, processor_tb);
 
-        // Test 1: Test with an ADD instruction (opcode = 6'b000000)
-        $display("Applying ADD instruction...");
-        instruction = 32'b000000_00000_00001_00000_00000000000; // ADD instruction (example)
-        #10; // Wait for some time to observe the result
+        // Test 1: Test with a write operation to register 1
+        $display("Writing to register 1...");
+        instruction = 32'b00000000000000010000000000000001;  // Example: ADD instruction with destination register 1
+        #10;  // Wait for some time to observe the result
 
-        // Test 2: Test with a SUB instruction (opcode = 6'b000001)
-        $display("Applying SUB instruction...");
-        instruction = 32'b000001_00000_00001_00000_00000000000; // SUB instruction (example)
-        #10;
+        // Test 2: Test reading from register 1
+        $display("Reading from register 1...");
+        instruction = 32'b00000000000000010000000000000010;  // Example: another instruction (could be a different operation)
+        #10;  // Wait for some time to observe the result
 
-        // Test 3: Test with an OR instruction (opcode = 6'b000011)
-        $display("Applying OR instruction...");
-        instruction = 32'b000011_00000_00001_00000_00000000000; // OR instruction (example)
-        #10;
+        // Test 2: SUB operation (opcode: 000001)
+        $display("Test 2: SUB operation...");
+        instruction = 32'b00000100000000010000000000000001;  // SUB instruction
+        #10;  // Wait for some time to observe the result
 
-        // Test 4: Test with no operation (default case)
-        $display("Applying NO OPERATION (default case)...");
-        instruction = 32'b111111_00000_00000_00000_00000000000; // Unknown opcode
-        #10;
+        // Test 3: AND operation (opcode: 000010)
+        $display("Test 3: AND operation...");
+        instruction = 32'b00001000000000010000000000000001;  // AND instruction
+        #10;  // Wait for some time to observe the result
+
+        // Test 4: OR operation (opcode: 000011)
+        $display("Test 4: OR operation...");
+        instruction = 32'b00001100000000010000000000000001;  // OR instruction
+        #10;  // Wait for some time to observe the result
 
         // End of simulation
         $finish;
     end
 
-    // Monitor changes in signals
+    // Monitor changes in signals (Watch `addr`, `we`, and `result`)
     initial begin
-        $monitor("Time = %0t, instruction = %b, result = %d", $time, instruction, result);
+        $monitor("Time = %0t, reg_addr = %b, we = %b, result = %h", 
+                  $time, addr, we, result);
     end
 endmodule
+
+

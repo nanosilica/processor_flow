@@ -17,18 +17,36 @@
 module control_unit (
     input wire [31:0] instruction,
     output reg alu_enable,
-    output reg [4:0] reg_addr
+    output reg [4:0] addr,
+    output reg we  // Write Enable signal
 );
+
     always @(*) begin
-        // Decode instruction and set control signals
-        case (instruction[31:26]) // Opcode field
-            6'b000000: begin // Example: ADD instruction
+        case (instruction[31:26])  // OpCode field
+            6'b000000: begin // ADD instruction
                 alu_enable = 1'b1;
-                reg_addr = instruction[25:21]; // Example: source register
+                addr = instruction[15:11]; // Destination register (rd)
+                we = 1'b1; // Enable writing to register
+            end
+            6'b000001: begin // SUB instruction
+                alu_enable = 1'b1;
+                addr = instruction[15:11]; 
+                we = 1'b1; // Enable writing to register
+            end
+            6'b000010: begin // AND instruction
+                alu_enable = 1'b1;
+                addr = instruction[15:11];
+                we = 1'b1; // Enable writing to register
+            end
+            6'b000011: begin // OR instruction
+                alu_enable = 1'b1;
+                addr = instruction[15:11];
+                we = 1'b1; // Enable writing to register
             end
             default: begin
                 alu_enable = 1'b0;
-                reg_addr = 5'b0;
+                addr = 5'b0;
+                we = 1'b0; // No writing to register in default case
             end
         endcase
     end

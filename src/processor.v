@@ -27,30 +27,35 @@ module processor (
     // Internal wires and registers
     wire [31:0] alu_result;
     wire [31:0] reg_data;
-    wire [4:0] reg_addr;
+    wire [4:0] addr;
     wire alu_enable;
+    wire we; // Write enable signal for the register file
 
     // Instantiate ALU
     alu alu_instance (
         .a(reg_data),
-        .b(instruction[15:0]), // Example: using immediate value from instruction
+        //.b(instruction[15:0]), // Example: using immediate value from instruction
+        .b({16'b0, instruction[15:0]}), // Extending to 32-bits
         .opcode(instruction[31:26]), // Example: opcode from instruction
         .result(alu_result)
     );
 
-    // Instantiate Register File
+    // Instantiate Register File with the write enable signal
     reg_file reg_file_instance (
         .clk(clk),
         .reset(reset),
-        .addr(reg_addr),
+        .addr(addr),
+        .data_in(alu_result), // Assume writing ALU result back to register file
+        .we(we),              // Pass the write enable signal
         .data_out(reg_data)
     );
 
-    // Instantiate Control Unit
+    // Instantiate Control Unit to generate control signals
     control_unit control_unit_instance (
         .instruction(instruction),
         .alu_enable(alu_enable),
-        .reg_addr(reg_addr)
+        .addr(addr),
+        .we(we) // Pass the write enable to the control unit
     );
 
     // Assign final result (example)
