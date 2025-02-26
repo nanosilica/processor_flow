@@ -7,7 +7,8 @@ This project implements a top-level CPU design with various submodules in Verilo
 ![project_structure](https://github.com/user-attachments/assets/73f451ab-a7df-4241-b087-8115b8e351e4)
 
 ## Block Diagram
-![Uploading block_diagram_sketch.png…]()
+
+![block_diagram_sketch](https://github.com/user-attachments/assets/da8d68c6-8445-467e-bee3-6d8c5f7c98db)
 
 
 ## Modules Overview
